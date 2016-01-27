@@ -4,6 +4,7 @@ var sourcemaps = require('gulp-sourcemaps');
 var stylus = require('gulp-stylus');
 var del = require('del');
 var runSequence = require('run-sequence');
+var proxy = require('proxy-middleware');
 
 var paths = {
   scripts: 'app/js/**/*.js',
@@ -23,7 +24,6 @@ var bundle = (function () {
     var gutil = require('gulp-util');
     var assign = require('lodash.assign');
     var watchify = require('watchify');
-    var assign = require('lodash.assign');
     var buffer = require('vinyl-buffer');
     var source = require('vinyl-source-stream');
 
@@ -78,11 +78,36 @@ gulp.task('stylus', function () {
     .pipe(connect.reload());
 });
 
+gulp.task('usemin', function() {
+  var uglify = require('gulp-uglify');
+  var minifyCss = require('gulp-minify-css');
+  var usemin = require('gulp-usemin');
+  
+  return gulp.src('dist/index.html')
+    .pipe(usemin({
+      css: [minifyCss],
+      js: [uglify],
+      inlinejs: [uglify],
+      inlinecss: [minifyCss, 'concat']
+    }))
+    .pipe(gulp.dest('dist'));
+});
+
 gulp.task('connect', function () {
   return connect.server({
     root: 'dist',
     port: 8080,
-    livereload: true
+    livereload: true,
+    middleware: function () {
+      function createProxy(path) {
+        return proxy({
+          port: 8081,
+          pathname: path,
+          route: path
+        });
+      }
+      return [createProxy('/api')];
+    }
   });
 });
 
@@ -95,7 +120,7 @@ gulp.task('watch', function () {
 
 gulp.task('build', ['stylus', 'js', 'css', 'html', 'img']);
 gulp.task('dist', function (callback) {
-  runSequence('clean', 'build', callback);
+  runSequence('clean', 'build', 'usemin', callback);
 });
 gulp.task('server', ['build', 'connect', 'watch']);
 gulp.task('default', ['server']);
