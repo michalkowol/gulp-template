@@ -80,15 +80,15 @@ gulp.task('stylus', function () {
 
 gulp.task('usemin', function() {
   var uglify = require('gulp-uglify');
-  var minifyCss = require('gulp-minify-css');
+  var cssnano = require('gulp-cssnano');
   var usemin = require('gulp-usemin');
   
   return gulp.src('dist/index.html')
     .pipe(usemin({
-      css: [minifyCss],
+      css: [cssnano],
       js: [uglify],
       inlinejs: [uglify],
-      inlinecss: [minifyCss, 'concat']
+      inlinecss: [cssnano, 'concat']
     }))
     .pipe(gulp.dest('dist'));
 });
