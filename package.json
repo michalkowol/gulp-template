@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "dependencies": {
     "bootstrap": "3.3.x",
+    "bootstrap-datepicker": "1.5.x",
+    "bootstrap-notify": "3.1.x",
     "director": "1.2.x",
+    "font-awesome": "4.5.x",
     "jquery": "2.2.x",
     "lodash": "4.3.x",
+    "magnific-popup": "1.0.x",
     "marked": "0.3.x",
     "react": "0.14.x",
     "react-dom": "0.14.x",
-    "redux": "3.3.x",
     "signals": "1.0.x"
   },
   "devDependencies": {
