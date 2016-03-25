@@ -19,34 +19,37 @@ gulp.task('clean', function() {
 });
 
 var bundle = (function () {
-    var browserify = require('browserify');
-    var babelify = require('babelify');
-    var gutil = require('gulp-util');
-    var assign = require('lodash.assign');
-    var watchify = require('watchify');
-    var buffer = require('vinyl-buffer');
-    var source = require('vinyl-source-stream');
+  var browserify = require('browserify');
+  var babelify = require('babelify');
+  var gutil = require('gulp-util');
+  var assign = require('lodash.assign');
+  var watchify = require('watchify');
+  var buffer = require('vinyl-buffer');
+  var source = require('vinyl-source-stream');
 
-    var customOpts = {
-        entries: './app/js/app.js',
-        debug: true,
-        transform: [babelify.configure({presets: ["es2015", "react"]})]
-    };
-    var opts = assign({}, watchify.args, customOpts);
-    var b = watchify(browserify(opts));
-    var bundle = function () {
-        gutil.log("Bundle using '", gutil.colors.cyan("\bbrowserify"), "\b'...")
-        return b.bundle()
-            .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-            .pipe(source('bundle.js'))
-            .pipe(buffer())
-            .pipe(sourcemaps.init({loadMaps: true}))
-            .pipe(sourcemaps.write('./'))
-            .pipe(gulp.dest('dist/js'))
-            .pipe(connect.reload());
-    };
-    b.on('update', bundle);
-    return bundle;
+  var customOpts = {
+    entries: './app/js/app.js',
+    debug: true,
+    paths: ['./app/js', './node_modules'],
+    transform: [babelify.configure({ignore: '/node_modules/', presets: ["es2015", "react"]})]
+  };
+  var opts = assign({}, watchify.args, customOpts);
+  var b = watchify(browserify(opts));
+  
+  var bundleClosure = function () {
+    gutil.log("Bundle using '", gutil.colors.cyan("\bbrowserify"), "\b'...")
+    return b.bundle()
+      .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+      .pipe(source('bundle.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({loadMaps: true}))
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest('dist/js'))
+      .pipe(connect.reload());
+  };
+  
+  b.on('update', bundleClosure);
+  return bundleClosure;
 })();
 
 gulp.task('js', bundle);
@@ -59,14 +62,14 @@ gulp.task('html', function () {
 
 gulp.task('css', function () {
   return gulp.src(paths.css)
-      .pipe(gulp.dest('dist/css'))
-      .pipe(connect.reload());
+    .pipe(gulp.dest('dist/css'))
+    .pipe(connect.reload());
 });
 
 gulp.task('img', function () {
   return gulp.src(paths.img)
-      .pipe(gulp.dest('dist/img'))
-      .pipe(connect.reload());
+    .pipe(gulp.dest('dist/img'))
+    .pipe(connect.reload());
 });
 
 gulp.task('stylus', function () {
