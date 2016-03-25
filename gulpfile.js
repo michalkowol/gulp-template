@@ -18,6 +18,7 @@ gulp.task('clean', function() {
   return del(['dist']);
 });
 
+var watchifyBundle;
 var bundle = (function () {
   var browserify = require('browserify');
   var babelify = require('babelify');
@@ -34,11 +35,11 @@ var bundle = (function () {
     transform: [babelify.configure({ignore: '/node_modules/', presets: ["es2015", "react"]})]
   };
   var opts = assign({}, watchify.args, customOpts);
-  var b = watchify(browserify(opts));
+  watchifyBundle = watchify(browserify(opts));
   
   var bundleClosure = function () {
-    gutil.log("Bundle using '", gutil.colors.cyan("\bbrowserify"), "\b'...")
-    return b.bundle()
+    gutil.log("Starting '", gutil.colors.cyan("\bbrowserify"), "\b'...");
+    return watchifyBundle.bundle()
       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
       .pipe(source('bundle.js'))
       .pipe(buffer())
@@ -47,12 +48,19 @@ var bundle = (function () {
       .pipe(gulp.dest('dist/js'))
       .pipe(connect.reload());
   };
-  
-  b.on('update', bundleClosure);
+
+  watchifyBundle.on('update', bundleClosure);
+  watchifyBundle.on('time', function (time) {
+    gutil.log("Finished '", gutil.colors.cyan("\bbrowserify"), "\b' after", gutil.colors.magenta(time + " ms"));
+  });
   return bundleClosure;
 })();
 
 gulp.task('js', bundle);
+
+gulp.task('close', function () {
+  if (watchifyBundle !== undefined) watchifyBundle.close();
+});
 
 gulp.task('html', function () {
   return gulp.src(paths.htmls)
@@ -123,7 +131,7 @@ gulp.task('watch', function () {
 
 gulp.task('build', ['stylus', 'js', 'css', 'html', 'img']);
 gulp.task('dist', function (callback) {
-  runSequence('clean', 'build', 'usemin', callback);
+  runSequence('clean', 'build', 'usemin', 'close', callback);
 });
 gulp.task('server', ['build', 'connect', 'watch']);
 gulp.task('default', ['server']);
