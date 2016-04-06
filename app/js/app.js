@@ -1,4 +1,4 @@
-import Stateful from './component/Components.react';
+import Stateful from 'component/Components.react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import director from 'director';

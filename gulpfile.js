@@ -7,14 +7,12 @@ var runSequence = require('run-sequence');
 var proxy = require('proxy-middleware');
 
 var paths = {
-  scripts: 'app/js/**/*.js',
-  htmls: ['app/index.html'],
-  css: ['app/css/**/*.css', 'node_modules/bootstrap/dist/css/**/*.css'],
-  stylus: 'app/css/**/*.styl',
-  img: "app/img/**/*"
+  css: ['app/css/**/*.css', 'node_modules/bootstrap/dist/css/**/*.css', 'node_modules/magnific-popup/dist/**/*.css'],
+  stylus: ['app/css/**/*.styl'],
+  assets: ['app/index.html', 'app/.htaccess', 'app/img/**/*', 'app/api/**/*']
 };
 
-gulp.task('clean', function() {
+gulp.task('clean', function () {
   return del(['dist']);
 });
 
@@ -62,21 +60,15 @@ gulp.task('close', function () {
   if (watchifyBundle !== undefined) watchifyBundle.close();
 });
 
-gulp.task('html', function () {
-  return gulp.src(paths.htmls)
-    .pipe(gulp.dest('dist'))
-    .pipe(connect.reload());
-});
-
 gulp.task('css', function () {
   return gulp.src(paths.css)
     .pipe(gulp.dest('dist/css'))
     .pipe(connect.reload());
 });
 
-gulp.task('img', function () {
-  return gulp.src(paths.img)
-    .pipe(gulp.dest('dist/img'))
+gulp.task('assets', function () {
+  return gulp.src(paths.assets, {base: 'app'})
+    .pipe(gulp.dest('dist'))
     .pipe(connect.reload());
 });
 
@@ -89,7 +81,7 @@ gulp.task('stylus', function () {
     .pipe(connect.reload());
 });
 
-gulp.task('usemin', function() {
+gulp.task('usemin', function () {
   var uglify = require('gulp-uglify');
   var cssnano = require('gulp-cssnano');
   var usemin = require('gulp-usemin');
@@ -123,13 +115,12 @@ gulp.task('connect', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch(paths.htmls, ['html']);
   gulp.watch(paths.css, ['css']);
   gulp.watch(paths.stylus, ['stylus']);
-  gulp.watch(paths.img, ['img']);
+  gulp.watch(paths.assets, ['assets']);
 });
 
-gulp.task('build', ['stylus', 'js', 'css', 'html', 'img']);
+gulp.task('build', ['stylus', 'js', 'css', 'assets']);
 gulp.task('dist', function (callback) {
   runSequence('clean', 'build', 'usemin', 'close', callback);
 });
