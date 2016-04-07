@@ -1,14 +1,14 @@
 var gulp = require('gulp');
 var connect = require('gulp-connect');
 var sourcemaps = require('gulp-sourcemaps');
-var stylus = require('gulp-stylus');
+var sass = require('gulp-sass');
 var del = require('del');
 var runSequence = require('run-sequence');
 var proxy = require('proxy-middleware');
 
 var paths = {
   css: ['app/css/**/*.css', 'node_modules/bootstrap/dist/css/**/*.css', 'node_modules/magnific-popup/dist/**/*.css'],
-  stylus: ['app/css/**/*.styl'],
+  sass: ['app/css/**/*.scss'],
   assets: ['app/index.html', 'app/.htaccess', 'app/img/**/*', 'app/api/**/*']
 };
 
@@ -72,10 +72,10 @@ gulp.task('assets', function () {
     .pipe(connect.reload());
 });
 
-gulp.task('stylus', function () {
-  return gulp.src(paths.stylus)
+gulp.task('sass', function () {
+  return gulp.src(paths.sass)
     .pipe(sourcemaps.init())
-    .pipe(stylus())
+    .pipe(sass().on('error', sass.logError))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('dist/css'))
     .pipe(connect.reload());
@@ -116,11 +116,11 @@ gulp.task('connect', function () {
 
 gulp.task('watch', function () {
   gulp.watch(paths.css, ['css']);
-  gulp.watch(paths.stylus, ['stylus']);
+  gulp.watch(paths.sass, ['sass']);
   gulp.watch(paths.assets, ['assets']);
 });
 
-gulp.task('build', ['stylus', 'js', 'css', 'assets']);
+gulp.task('build', ['sass', 'js', 'css', 'assets']);
 gulp.task('dist', function (callback) {
   runSequence('clean', 'build', 'usemin', 'close', callback);
 });

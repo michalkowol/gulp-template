@@ -1,7 +1,7 @@
-defaultBackground = #333
-activeBackground = #444
-defaultColor = #fff
-activeColor = #ddd
+$defaultBackground: #333;
+$activeBackground: #444;
+$defaultColor: #fff;
+$activeColor: #ddd;
 
 @media (min-width: 768px) {
   .navbar-fixed-top {
@@ -17,88 +17,88 @@ activeColor = #ddd
 }
 
 .navbar-black {
-  background-color: defaultBackground
-  border-color: activeBackground
-  background-image: none
-  background-repeat: no-repeat
+  background-color: $defaultBackground;
+  border-color: $activeBackground;
+  background-image: none;
+  background-repeat: no-repeat;
 }
 
 .navbar-black .navbar-brand {
-  color: defaultColor
+  color: $defaultColor;
 }
 
 .navbar-black .navbar-brand:hover,
 .navbar-black .navbar-brand:focus {
-  color: activeColor
+  color: $activeColor;
 }
 
 .navbar-black .navbar-text {
-  color: defaultColor
+  color: $defaultColor;
 }
 
 .navbar-black .navbar-nav > li > a {
-  color: defaultColor
+  color: $defaultColor;
 }
 
 .navbar-black .navbar-nav > li > a:hover,
 .navbar-black .navbar-nav > li > a:focus {
-  color: activeColor
+  color: $activeColor;
 }
 
 .navbar-black .navbar-nav > .active > a,
 .navbar-black .navbar-nav > .active > a:hover,
 .navbar-black .navbar-nav > .active > a:focus {
-  color: activeColor
-  background-color: activeBackground
+  color: $activeColor;
+  background-color: $activeBackground;
 }
 
 .navbar-black .navbar-nav > .open > a,
 .navbar-black .navbar-nav > .open > a:hover,
 .navbar-black .navbar-nav > .open > a:focus {
-  color: activeColor
-  background-color: activeBackground
+  color: $activeColor;
+  background-color: $activeBackground;
 }
 
 .navbar-black .navbar-toggle {
-  border-color: activeBackground
+  border-color: $activeBackground;
 }
 
 .navbar-black .navbar-toggle:hover,
 .navbar-black .navbar-toggle:focus {
-  background-color: activeBackground
+  background-color: $activeBackground;
 }
 
 .navbar-black .navbar-toggle .icon-bar {
-  background-color: defaultColor
+  background-color: $defaultColor;
 }
 
 .navbar-black .navbar-collapse,
 .navbar-black .navbar-form {
-  border-color: defaultBackground
+  border-color: $defaultBackground;
 }
 
 .navbar-black .navbar-link {
-  color: defaultColor
+  color: $defaultColor;
 }
 
 .navbar-black .navbar-link:hover {
-  color: activeColor
+  color: $activeColor;
 }
 
 @media (max-width: 767px) {
   .navbar-black .navbar-nav .open .dropdown-menu > li > a {
-    color: defaultColor
+    color: $defaultColor;
   }
 
   .navbar-black .navbar-nav .open .dropdown-menu > li > a:hover,
   .navbar-black .navbar-nav .open .dropdown-menu > li > a:focus {
-    color: activeColor
+    color: $activeColor;
   }
 
   .navbar-black .navbar-nav .open .dropdown-menu > .active > a,
   .navbar-black .navbar-nav .open .dropdown-menu > .active > a:hover,
   .navbar-black .navbar-nav .open .dropdown-menu > .active > a:focus {
-    color: activeColor
-    background-color: activeBackground
+    color: $activeColor;
+    background-color: $activeBackground;
   }
 }
